@@ -10,7 +10,7 @@ exports.addStore = (req, res) => {
 }
 
 exports.createStore = async(req, res) => {
-
+		console.log(req.body);
 		const store = await (new Store(req.body)).save()
 		req.flash('success', `Successfully Created ${store.name}. Care to leave a review?`)
 		res.redirect(`/store/${store.slug}`)
@@ -35,6 +35,8 @@ exports.editStore = async(req, res) => {
 }
 
 exports.updateStore= async(req, res) => {
+	//set the location data to be a point
+	req.body.location.type = 'Point';
 	//find and update the store
 	const  store = await Store.findByIdAndUpdate({ _id : req.params.id }, req.body, {
 		new: true, // return the new store instead of the old one
