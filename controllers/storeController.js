@@ -39,7 +39,7 @@ exports.resize = async(req, res, next) => {
 	const photo = await jimp.read(req.file.buffer)
 	await photo.resize(800, jimp.AUTO)
 	await photo.write(`./public/uploads/${req.body.photo}`)
-	// once we have writeen the photo to our filesystem, keep going
+	// once we have written the photo to our filesystem, keep going
 	next()
 
 }
@@ -80,4 +80,12 @@ exports.updateStore= async(req, res) => {
 	req.flash('success', `Successfully updated <strong>${store.name}</strong>. <a href="/stores/${store.slug}">View Store =></a>`)
 	//redirect them the store and tell them it worked
 	res.redirect(`/stores/${store._id}/edit`)
+}
+
+exports.getStoreBySlug = async(req, res, next) => {
+	const store = await Store.findOne({slug: req.params.slug})
+	if(!store){
+		return next()
+	}
+	res.render('store', {store, title: store.name})
 }
